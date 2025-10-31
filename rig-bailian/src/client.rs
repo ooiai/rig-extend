@@ -1,9 +1,12 @@
+//! Category: client.rs (Client and Builder; implements Provider/Verify/Completion/Embedding)
+
 use rig::client::{CompletionClient, EmbeddingsClient, ProviderClient, VerifyClient, VerifyError};
 use rig::http_client::{self, HttpClientExt};
 
 use super::BAILIAN_API_BASE_URL;
 use super::completion::CompletionModel;
 use super::embedding::EmbeddingModel;
+use super::rerank::RerankModel;
 
 /// Provider client: Client<T>
 #[derive(Clone)]
@@ -117,6 +120,11 @@ impl Client<reqwest::Client> {
         self.http_client
             .post(self.url(path))
             .bearer_auth(&self.api_key)
+    }
+
+    /// Create a rerank model bound to this client (DashScope endpoint).
+    pub fn rerank_model(&self, model: &str, endpoint: Option<String>) -> RerankModel {
+        RerankModel::new(self.clone(), model, endpoint)
     }
 }
 
