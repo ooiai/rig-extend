@@ -1,6 +1,6 @@
 [package]
 name = "rig-tei"
-version = "0.1.0"
+version = "0.1.1"
 authors.workspace = true
 edition.workspace = true
 description = "Rig adapter for TEI: integrates the Text Embedding Inference service with the Rig ecosystem (request/response types, streaming, error handling)."
