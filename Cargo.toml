@@ -3,7 +3,7 @@ resolver = "3"
 members = ["rig-bailian", "rig-tei","rig-volcengine"]
 
 [workspace.package]
-version = "1.0.0"
+version = "0.1.0"
 authors = ["jerrychir <jerrychir@gmail.com>"]
 edition = "2024"
 

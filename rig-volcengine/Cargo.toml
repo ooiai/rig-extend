@@ -3,6 +3,20 @@ name = "rig-volcengine"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true
+description = "Rig adapter for Volcengine: integrates the Volcengine AI service with the Rig ecosystem (request/response types, streaming, error handling)."
+license = "MIT"
+homepage = "https://github.com/ooiai/rig-extend"
+documentation = "https://docs.rs/rig-volcengine"
+keywords = ["rig", "volcengine", "llm", "ai", "provider"]
+categories = ["science::artificial-intelligence", "api-bindings"]
+include = [
+    "/src/**",
+    "/Cargo.toml",
+    "/README*",
+    "/LICENSE*",
+    "/examples/**",
+    "/docs/**",
+]
 
 
 [dependencies]
