@@ -8,7 +8,7 @@ license = "MIT"
 homepage = "https://github.com/ooiai/rig-extend"
 documentation = "https://docs.rs/rig-volcengine"
 keywords = ["rig", "volcengine", "llm", "ai", "provider"]
-categories = ["science::artificial-intelligence", "api-bindings"]
+categories = ["api-bindings", "web-programming::http-client"]
 include = [
     "/src/**",
     "/Cargo.toml",
