@@ -23,15 +23,18 @@ fn merge(left: serde_json::Value, right: serde_json::Value) -> serde_json::Value
     }
 }
 
-pub(crate) async fn stream_completion(
-    model: &CompletionModel<reqwest::Client>,
+pub(crate) async fn stream_completion<T>(
+    model: &CompletionModel<T>,
     request: CompletionRequest,
 ) -> Result<
     StreamingCompletionResponse<
-        <CompletionModel<reqwest::Client> as rig::completion::CompletionModel>::StreamingResponse,
+        <CompletionModel<T> as rig::completion::CompletionModel>::StreamingResponse,
     >,
     CompletionError,
-> {
+>
+where
+    T: rig::http_client::HttpClientExt + Clone + Default + Send + 'static,
+{
     let preamble = request.preamble.clone();
     let mut request = model.create_completion_request(request)?;
 
@@ -44,6 +47,7 @@ pub(crate) async fn stream_completion(
     let req = model
         .client
         .post("/chat/completions")?
+        .header("Content-Type", "application/json")
         .body(serde_json::to_vec(&request)?)
         .map_err(|e| CompletionError::HttpError(e.into()))?;
 
