@@ -112,19 +112,10 @@ where
     }
 }
 
-impl Client<reqwest::Client> {
-    pub(crate) fn reqwest_post(&self, path: &str) -> reqwest::RequestBuilder {
-        self.http_client
-            .post(self.url(path))
-            .bearer_auth(&self.api_key)
-    }
-}
-
 impl ProviderClient for Client<reqwest::Client> {
-    fn from_env() -> Self
-    where
-        Self: Sized,
-    {
+    type Input = String;
+
+    fn from_env() -> Self {
         let api_key = std::env::var("VOLCENGINE_API_KEY").expect("VOLCENGINE_API_KEY not set");
         let base_url = std::env::var("VOLCENGINE_BASE_URL")
             .ok()
@@ -132,34 +123,32 @@ impl ProviderClient for Client<reqwest::Client> {
         Self::builder(&api_key).base_url(&base_url).build()
     }
 
-    fn from_val(input: rig::client::ProviderValue) -> Self
-    where
-        Self: Sized,
-    {
-        let rig::client::ProviderValue::Simple(api_key) = input else {
-            panic!("Incorrect provider value type")
-        };
-        Self::new(&api_key)
+    fn from_val(input: String) -> Self {
+        Self::new(&input)
     }
 }
 
 impl CompletionClient for Client<reqwest::Client> {
     type CompletionModel = CompletionModel<reqwest::Client>;
 
-    fn completion_model(&self, model: &str) -> Self::CompletionModel {
-        CompletionModel::new(self.clone(), model)
+    fn completion_model(&self, model: impl Into<String>) -> Self::CompletionModel {
+        CompletionModel::new(self.clone(), &model.into())
     }
 }
 
 impl EmbeddingsClient for Client<reqwest::Client> {
     type EmbeddingModel = EmbeddingModel<reqwest::Client>;
 
-    fn embedding_model(&self, model: &str) -> Self::EmbeddingModel {
-        EmbeddingModel::new(self.clone(), model, 0)
+    fn embedding_model(&self, model: impl Into<String>) -> Self::EmbeddingModel {
+        EmbeddingModel::new(self.clone(), &model.into(), 0)
     }
 
-    fn embedding_model_with_ndims(&self, model: &str, ndims: usize) -> Self::EmbeddingModel {
-        EmbeddingModel::new(self.clone(), model, ndims)
+    fn embedding_model_with_ndims(
+        &self,
+        model: impl Into<String>,
+        ndims: usize,
+    ) -> Self::EmbeddingModel {
+        EmbeddingModel::new(self.clone(), &model.into(), ndims)
     }
 }
 

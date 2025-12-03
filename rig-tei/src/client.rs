@@ -139,17 +139,16 @@ impl<T> Client<T> {
 }
 
 impl ProviderClient for Client<reqwest::Client> {
+    type Input = String;
+
     fn from_env() -> Self {
         let base_url =
             std::env::var("TEI_BASE_URL").unwrap_or_else(|_| TEI_DEFAULT_BASE_URL.to_string());
         Self::builder().base_url(&base_url).build()
     }
 
-    fn from_val(input: rig::client::ProviderValue) -> Self {
-        let rig::client::ProviderValue::Simple(base_url) = input else {
-            panic!("Incorrect provider value type")
-        };
-        ClientBuilder::new().base_url(&base_url).build()
+    fn from_val(input: String) -> Self {
+        ClientBuilder::new().base_url(&input).build()
     }
 }
 
@@ -163,11 +162,15 @@ impl VerifyClient for Client<reqwest::Client> {
 impl EmbeddingsClient for Client<reqwest::Client> {
     type EmbeddingModel = EmbeddingModel<reqwest::Client>;
 
-    fn embedding_model(&self, model: &str) -> Self::EmbeddingModel {
-        EmbeddingModel::new(self.clone(), model, 0)
+    fn embedding_model(&self, model: impl Into<String>) -> Self::EmbeddingModel {
+        EmbeddingModel::new(self.clone(), &model.into(), 0)
     }
 
-    fn embedding_model_with_ndims(&self, model: &str, ndims: usize) -> Self::EmbeddingModel {
-        EmbeddingModel::new(self.clone(), model, ndims)
+    fn embedding_model_with_ndims(
+        &self,
+        model: impl Into<String>,
+        ndims: usize,
+    ) -> Self::EmbeddingModel {
+        EmbeddingModel::new(self.clone(), &model.into(), ndims)
     }
 }

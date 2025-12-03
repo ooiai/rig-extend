@@ -37,10 +37,10 @@ pub struct CompletionModel<T = reqwest::Client> {
 }
 
 impl<T> CompletionModel<T> {
-    pub fn new(client: Client<T>, model: &str) -> Self {
+    pub fn new(client: Client<T>, model: impl Into<String>) -> Self {
         Self {
             client,
-            model: model.to_string(),
+            model: model.into(),
         }
     }
 
@@ -124,9 +124,17 @@ impl TryFrom<message::ToolChoice> for ToolChoice {
     }
 }
 
-impl completion::CompletionModel for CompletionModel<reqwest::Client> {
+impl<T> completion::CompletionModel for CompletionModel<T>
+where
+    T: http_client::HttpClientExt + Clone + Default + Send + 'static,
+{
     type Response = openai::CompletionResponse;
     type StreamingResponse = openai::StreamingCompletionResponse;
+    type Client = Client<T>;
+
+    fn make(client: &Self::Client, model: impl Into<String>) -> Self {
+        Self::new(client.clone(), model)
+    }
 
     async fn completion(
         &self,
@@ -155,19 +163,20 @@ impl completion::CompletionModel for CompletionModel<reqwest::Client> {
         };
 
         async move {
-            let response = self
+            let body = serde_json::to_vec(&request)?;
+            let req = self
                 .client
-                .reqwest_post("/chat/completions")
-                .json(&request)
-                .send()
+                .post("/chat/completions")?
+                .header("Content-Type", "application/json")
+                .body(body)
+                .map_err(|e| CompletionError::HttpError(e.into()))?;
+
+            let response = http_client::HttpClientExt::send(&self.client.http_client, req)
                 .await
-                .map_err(|e| http_client::Error::Instance(e.into()))?;
+                .map_err(CompletionError::HttpError)?;
 
             if response.status().is_success() {
-                let t = response
-                    .text()
-                    .await
-                    .map_err(|e| http_client::Error::Instance(e.into()))?;
+                let t = http_client::text(response).await?;
                 tracing::debug!(target: "rig::completions", "Volcengine completion response: {t}");
 
                 match serde_json::from_str::<ApiResponse<openai::CompletionResponse>>(&t)? {
@@ -196,12 +205,8 @@ impl completion::CompletionModel for CompletionModel<reqwest::Client> {
                     ApiResponse::Err(err) => Err(CompletionError::ProviderError(err.error.message)),
                 }
             } else {
-                Err(CompletionError::ProviderError(
-                    response
-                        .text()
-                        .await
-                        .map_err(|e| http_client::Error::Instance(e.into()))?,
-                ))
+                let t = http_client::text(response).await?;
+                Err(CompletionError::ProviderError(t))
             }
         }
         .instrument(span)

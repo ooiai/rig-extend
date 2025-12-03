@@ -31,10 +31,10 @@ pub struct EmbeddingModel<T = reqwest::Client> {
 }
 
 impl<T> EmbeddingModel<T> {
-    pub fn new(client: Client<T>, model: &str, ndims: usize) -> Self {
+    pub fn new(client: Client<T>, model: impl Into<String>, ndims: usize) -> Self {
         Self {
             client,
-            model: model.to_string(),
+            model: model.into(),
             ndims,
         }
     }
@@ -42,9 +42,17 @@ impl<T> EmbeddingModel<T> {
 
 impl<T> embeddings::EmbeddingModel for EmbeddingModel<T>
 where
-    T: HttpClientExt + Clone + std::fmt::Debug + Send + 'static,
+    T: HttpClientExt + Clone + std::fmt::Debug + Default + Send + 'static,
 {
     const MAX_DOCUMENTS: usize = 1024;
+
+    type Client = Client<T>;
+
+    fn make(client: &Self::Client, model: impl Into<String>, ndims: Option<usize>) -> Self {
+        let model = model.into();
+        let dims = ndims.unwrap_or(0);
+        Self::new(client.clone(), model, dims)
+    }
 
     fn ndims(&self) -> usize {
         self.ndims
