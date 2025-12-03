@@ -1,13 +1,13 @@
 # rig-tei
 
 Rig adapter for TEI (Text Embedding Inference). This crate integrates local or remote TEI-style endpoints into the Rig ecosystem through a consistent, strongly-typed interface for:
+
 - Text embeddings
 - Reranking
 - Simple endpoint overrides (per feature)
 
 Documentation: https://docs.rs/rig-tei
 Repository: https://github.com/ooiai/rig-extend
-
 
 ## Features
 
@@ -22,8 +22,8 @@ Repository: https://github.com/ooiai/rig-extend
 - Typed requests/responses and structured errors aligned with Rig
 
 Key defaults:
-- `TEI_DEFAULT_BASE_URL`: `http://127.0.0.1:8080`
 
+- `TEI_DEFAULT_BASE_URL`: `http://127.0.0.1:8080`
 
 ## Installation
 
@@ -32,8 +32,8 @@ From crates.io (recommended):
 ```toml
 [dependencies]
 rig-tei = "0.1"
-rig = "0.23"           # Rig core
-rig-derive = "0.1"     # Optional: for derive macros like Embed
+rig-core = "0.25.0"    # Rig core
+rig-derive = "0.1.9"   # Optional: for derive macros like Embed
 ```
 
 From a workspace/path (if you’re developing locally):
@@ -41,10 +41,9 @@ From a workspace/path (if you’re developing locally):
 ```toml
 [dependencies]
 rig-tei = { path = "../rig-tei" }
-rig = "0.23"
-rig-derive = "0.1"
+rig-core = "0.25.0"
+rig-derive = "0.1.9"
 ```
-
 
 ## Configuration (Environment Variables)
 
@@ -58,10 +57,10 @@ export TEI_BASE_URL="http://localhost:8080"
 ```
 
 You can also bypass the environment variable and override feature endpoints directly via the builder:
+
 - `.embed_endpoint("http://localhost:6280")`
 - `.rerank_endpoint("http://localhost:6290")`
 - `.predict_endpoint("http://localhost:6300")` (if your router supports it)
-
 
 ## Quick Start
 
@@ -133,7 +132,6 @@ async fn main() -> anyhow::Result<()> {
 }
 ```
 
-
 ## Examples
 
 More end‑to‑end samples are available in this crate’s examples directory:
@@ -149,12 +147,10 @@ cargo run --example tei_embeddings
 cargo run --example tei_rerank
 ```
 
-
 ## Versioning and Compatibility
 
 - Rust edition: 2024
-- This crate aligns its public surface with the Rig core abstractions. Check your `rig` crate version for compatibility (examples use `rig = "0.23"`).
-
+- This crate aligns its public surface with the Rig core abstractions. Check your `rig-core` crate version for compatibility (examples use `rig-core = "0.25.0"`).
 
 ## License
 

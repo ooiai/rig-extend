@@ -1,6 +1,7 @@
 # rig-volcengine
 
 Rig adapter for Volcengine (ByteDance Ark/Doubao). This crate integrates Volcengine’s OpenAI‑compatible APIs into the Rig ecosystem with a consistent, strongly‑typed interface for:
+
 - Chat completions (agents)
 - Text embeddings
 - Streaming responses
@@ -9,7 +10,6 @@ Use this adapter to swap Volcengine in and out with other providers supported by
 
 Documentation: https://docs.rs/rig-volcengine
 Repository: https://github.com/ooiai/rig-extend
-
 
 ## Features
 
@@ -22,10 +22,10 @@ Repository: https://github.com/ooiai/rig-extend
 - Sensible defaults and environment‑based configuration
 
 Key constants:
+
 - `VOLCENGINE_API_BASE_URL`: default base URL (`https://ark.cn-beijing.volces.com/api/v3`)
 - `TEXT_DOUBAO_EMBEDDING`, `TEXT_DOUBAO_EMBEDDING_LARGE`: convenience model ids for embeddings
 - `DOUBAO_SEED`: a convenience seed value for Doubao (if needed by your flow)
-
 
 ## Installation
 
@@ -34,8 +34,8 @@ From crates.io (recommended):
 ```toml
 [dependencies]
 rig-volcengine = "0.1"
-rig = "0.23"           # Rig core
-rig-derive = "0.1"     # Optional: for derive macros like Embed
+rig-core = "0.25.0"    # Rig core
+rig-derive = "0.1.9"   # Optional: for derive macros like Embed
 ```
 
 From a workspace/path (if you’re developing locally):
@@ -43,10 +43,9 @@ From a workspace/path (if you’re developing locally):
 ```toml
 [dependencies]
 rig-volcengine = { path = "../rig-volcengine" }
-rig = "0.23"
-rig-derive = "0.1"
+rig-core = "0.25.0"
+rig-derive = "0.1.9"
 ```
-
 
 ## Configuration (Environment Variables)
 
@@ -60,7 +59,6 @@ Example:
 export VOLCENGINE_API_KEY="ak-xxxxxxxx"
 # export VOLCENGINE_BASE_URL="https://ark.cn-beijing.volces.com/api/v3"
 ```
-
 
 ## Quick Start
 
@@ -119,7 +117,6 @@ async fn main() -> anyhow::Result<()> {
 }
 ```
 
-
 ## Examples
 
 More end‑to‑end samples are available in this crate’s examples directory:
@@ -135,12 +132,10 @@ cargo run --example agent_wirh_volcengine
 cargo run --example volcengine_embeddings
 ```
 
-
 ## Versioning and Compatibility
 
 - Rust edition: 2024
-- This crate aligns its public surface with the Rig core abstractions. Check your `rig` crate version for compatibility (examples use `rig = "0.23"`).
-
+- This crate aligns its public surface with the Rig core abstractions. Check your `rig-core` crate version for compatibility (examples use `rig-core = "0.25.0"`).
 
 ## License
 

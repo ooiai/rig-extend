@@ -1,6 +1,7 @@
 # rig-bailian
 
 Rig adapter for Alibaba BaiLian (DashScope). This crate integrates BaiLian’s OpenAI‑compatible APIs into the Rig ecosystem with a consistent, strongly‑typed interface for:
+
 - Chat completions (agents)
 - Text embeddings
 - Streaming responses
@@ -9,7 +10,6 @@ Rig adapter for Alibaba BaiLian (DashScope). This crate integrates BaiLian’s O
 Use this adapter to swap BaiLian in and out with other providers supported by Rig with minimal code changes.
 
 Documentation: https://docs.rs/rig-bailian
-
 
 ## Features
 
@@ -23,11 +23,11 @@ Documentation: https://docs.rs/rig-bailian
 - Sensible defaults and environment‑based configuration
 
 Key constants:
+
 - `QWEN3_MAX`: a convenience model id for chat completions
 - `TEXT_EMBEDDING_V4`: a convenience model id for embeddings
 - `GTE_RERANK_V2`: a convenience rerank model id
 - `BAILIAN_API_BASE_URL`: default base URL (`https://dashscope.aliyuncs.com/compatible-mode/v1`)
-
 
 ## Installation
 
@@ -36,8 +36,8 @@ From crates.io (recommended):
 ```toml
 [dependencies]
 rig-bailian = "0.1"
-rig = "0.23"           # Rig core
-rig-derive = "0.1"     # Optional: for derive macros like Embed
+rig-core = "0.25.0"    # Rig core
+rig-derive = "0.1.9"   # Optional: for derive macros like Embed
 ```
 
 From a workspace/path (if you’re developing locally):
@@ -45,10 +45,9 @@ From a workspace/path (if you’re developing locally):
 ```toml
 [dependencies]
 rig-bailian = { path = "../rig-bailian" }
-rig = "0.23"
-rig-derive = "0.1"
+rig-core = "0.25.0"
+rig-derive = "0.1.9"
 ```
-
 
 ## Configuration (Environment Variables)
 
@@ -62,7 +61,6 @@ Example:
 export BAILIAN_API_KEY="sk-xxxxxxxx"
 # export BAILIAN_BASE_URL="https://dashscope.aliyuncs.com/compatible-mode/v1"
 ```
-
 
 ## Quick Start
 
@@ -146,7 +144,6 @@ async fn main() -> anyhow::Result<()> {
 }
 ```
 
-
 ## Examples
 
 More end‑to‑end samples are available in the examples directory of this crate:
@@ -164,12 +161,10 @@ cargo run --example bailian_embeddings
 cargo run --example bailian_rereank
 ```
 
-
 ## Versioning and Compatibility
 
 - Rust edition: 2024
-- This crate aligns its public surface with the Rig core abstractions. Check your `rig` crate version for compatibility (examples use `rig = "0.23"`).
-
+- This crate aligns its public surface with the Rig core abstractions. Check your `rig-core` crate version for compatibility (examples use `rig-core = "0.25.0"`).
 
 ## License
 
