@@ -19,8 +19,8 @@ Add one or more adapters to your Cargo.toml. Once published on crates.io, you ca
 rig-bailian = "0.1"
 rig-volcengine = "0.1"
 rig-tei = "0.1"
-rig = "0.23"           # Your Rig core version
-rig-derive = "0.1"     # Optional: for derive macros like Embed
+rig-core = "0.25.0"    # Rig core
+rig-derive = "0.1.9"   # Optional: for derive macros like Embed
 ```
 
 If you’re working directly from this repository (path dependencies):
@@ -30,13 +30,13 @@ If you’re working directly from this repository (path dependencies):
 rig-bailian = { path = "rig-bailian" }
 rig-volcengine = { path = "rig-volcengine" }
 rig-tei = { path = "rig-tei" }
-rig = "0.23"
-rig-derive = "0.1"
+rig-core = "0.25.0"
+rig-derive = "0.1.9"
 ```
 
 ---
 
-## Quick start
+## Quick Start
 
 Below are minimal examples for each provider. For more complete samples, see the examples directories linked at the end of this README.
 
