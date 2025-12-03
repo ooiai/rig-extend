@@ -5,6 +5,10 @@ CARGO := cargo
 DOCKER := docker
 CD := cd
 
+BAILIAN_PATH := ./rig-bailian
+TEI_PATH := ./rig-tei
+VOLCENGINE_PATH := ./rig-volcengine
+
 
 # Function to check if there are changes to commit
 define git_push_if_needed
@@ -54,3 +58,16 @@ git-tag:
 # Git: push all local tags
 git-push-tags:
 	$(GIT) push --tags
+
+# clean rig-extend
+clean:
+	@echo "Cleaning rig-extend..."
+	$(CARGO) clean
+
+# Bailian Publish facade crate to crates.io (requires `cargo login`)
+bailian-publish:
+	@echo "===> Publishing bailian"
+	$(call git_commit_if_needed)
+	cd $(BAILIAN_PATH) &&  $(CARGO) publish -p rig-bailian --dry-run --registry crates-io || exit 1
+	cd $(BAILIAN_PATH) &&  $(CARGO) publish -p rig-bailian --registry crates-io || exit 1
+	cd $(BAILIAN_PATH) && $(CARGO) clean
