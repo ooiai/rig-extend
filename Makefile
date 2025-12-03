@@ -64,10 +64,32 @@ clean:
 	@echo "Cleaning rig-extend..."
 	$(CARGO) clean
 
+# Publish all crates to crates.io (requires `cargo login`)
+publish-all:
+	@echo "===> Publishing all crates (bailian, tei, volcengine)"
+	$(call git_commit_if_needed)
+	$(MAKE) bailian-publish || exit 1
+	$(MAKE) tei-publish || exit 1
+	$(MAKE) volcengine-publish || exit 1
+	$(CARGO) clean
+
 # Bailian Publish facade crate to crates.io (requires `cargo login`)
 bailian-publish:
 	@echo "===> Publishing bailian"
 	$(call git_commit_if_needed)
 	cd $(BAILIAN_PATH) &&  $(CARGO) publish -p rig-bailian --dry-run --registry crates-io || exit 1
 	cd $(BAILIAN_PATH) &&  $(CARGO) publish -p rig-bailian --registry crates-io || exit 1
-	cd $(BAILIAN_PATH) && $(CARGO) clean
+
+# TEI Publish facade crate to crates.io (requires `cargo login`)
+tei-publish:
+	@echo "===> Publishing tei"
+	$(call git_commit_if_needed)
+	cd $(TEI_PATH) &&  $(CARGO) publish -p rig-tei --dry-run --registry crates-io || exit 1
+	cd $(TEI_PATH) &&  $(CARGO) publish -p rig-tei --registry crates-io || exit 1
+
+# Volcengine Publish facade crate to crates.io (requires `cargo login`)
+volcengine-publish:
+	@echo "===> Publishing volcengine"
+	$(call git_commit_if_needed)
+	cd $(VOLCENGINE_PATH) &&  $(CARGO) publish -p rig-volcengine --dry-run --registry crates-io || exit 1
+	cd $(VOLCENGINE_PATH) &&  $(CARGO) publish -p rig-volcengine --registry crates-io || exit 1
