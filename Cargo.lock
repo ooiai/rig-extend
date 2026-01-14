@@ -1056,7 +1056,7 @@ dependencies = [
 
 [[package]]
 name = "rig-bailian"
-version = "0.1.2"
+version = "0.1.4"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1122,7 +1122,7 @@ dependencies = [
 
 [[package]]
 name = "rig-tei"
-version = "0.1.2"
+version = "0.1.4"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1142,7 +1142,7 @@ dependencies = [
 
 [[package]]
 name = "rig-volcengine"
-version = "0.1.2"
+version = "0.1.4"
 dependencies = [
  "anyhow",
  "async-stream",
