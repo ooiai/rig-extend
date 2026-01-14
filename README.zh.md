@@ -1,6 +1,7 @@
 # rig-extend（中文说明）
 
 本仓库收录了一组面向 Rig 生态的「提供商适配器」，用于将第三方 AI 服务无缝接入统一的 Rig 抽象。当前包含以下适配器并可持续扩展：
+
 - rig-bailian：阿里巴巴百炼（DashScope）适配器，支持聊天补全（Agent）、文本向量、流式输出与重排。
 - rig-volcengine：字节火山引擎（Ark/Doubao）适配器，支持聊天补全（Agent）、文本向量与流式输出。
 - rig-tei：TEI（Text Embedding Inference）本地/远程路由适配器，支持文本向量与重排，提供端点覆写能力。
@@ -14,23 +15,25 @@
 在 `Cargo.toml` 中添加需要的适配器依赖，并将 Rig 核心版本更新为 `rig-core = "0.25.0"`。
 
 从 crates.io 安装（推荐）：
+
 ```
 [dependencies]
 rig-bailian    = "0.1"
 rig-volcengine = "0.1"
 rig-tei        = "0.1"
-rig-core       = "0.25.0"    # Rig 核心
-rig-derive     = "0.1.9"     # 可选：派生宏（如 Embed）
+rig-core       = "0.28.0"    # Rig 核心
+rig-derive     = "0.1.10"     # 可选：派生宏（如 Embed）
 ```
 
 从本仓库工作区（path 依赖）安装（用于本地开发）：
+
 ```
 [dependencies]
 rig-bailian    = { path = "rig-bailian" }
 rig-volcengine = { path = "rig-volcengine" }
 rig-tei        = { path = "rig-tei" }
-rig-core       = "0.25.0"
-rig-derive     = "0.1.9"
+rig-core       = "0.28.0"
+rig-derive     = "0.1.10"
 ```
 
 ---
@@ -92,6 +95,7 @@ async fn main() -> anyhow::Result<()> {
 ```
 
 环境变量：
+
 - BAILIAN_API_KEY（必需）：DashScope API Key
 - BAILIAN_BASE_URL（可选）：默认 `https://dashscope.aliyuncs.com/compatible-mode/v1`
 
@@ -140,6 +144,7 @@ async fn main() -> anyhow::Result<()> {
 ```
 
 环境变量：
+
 - VOLCENGINE_API_KEY（必需）：Volcengine API Key
 - VOLCENGINE_BASE_URL（可选）：默认 `https://ark.cn-beijing.volces.com/api/v3`
 
@@ -196,6 +201,7 @@ async fn main() -> anyhow::Result<()> {
 ```
 
 环境变量：
+
 - TEI_BASE_URL（可选）：默认 `http://127.0.0.1:8080`
 - 亦可通过 Builder 覆写具体端点：`.embed_endpoint(..) .rerank_endpoint(..) .predict_endpoint(..)`
 
@@ -222,12 +228,14 @@ async fn main() -> anyhow::Result<()> {
 ## 运行示例
 
 在对应 crate 目录下运行示例（以 rig-bailian 为例）：
+
 ```
 # 请先确保相关环境变量已配置
 cargo run --example agent_wirh_bailian
 ```
 
 其他示例位置：
+
 - `rig-bailian/examples`：`agent_wirh_bailian.rs`、`bailian_embeddings.rs`、`bailian_rereank.rs`
 - `rig-volcengine/examples`：`agent_wirh_volcengine.rs`、`volcengine_embeddings.rs`
 - `rig-tei/examples`：`tei_embeddings.rs`、`tei_rerank.rs`
@@ -256,6 +264,7 @@ cargo run --example agent_wirh_bailian
 ## 扩展新的提供商
 
 本仓库鼓励扩展，添加新的适配器大致步骤：
+
 1. 在 workspace 新建 `rig-<provider>` crate。
 2. 实现 `Client` 并对接：
    - `ProviderClient`：提供 `from_env()` 与 `from_val(...)`。

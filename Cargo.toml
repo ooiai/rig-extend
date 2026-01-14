@@ -3,7 +3,7 @@ resolver = "3"
 members = ["rig-bailian", "rig-tei","rig-volcengine"]
 
 [workspace.package]
-version = "0.1.2"
+version = "0.1.4"
 authors = ["jerrychir <jerrychir@gmail.com>"]
 edition = "2024"
 
@@ -33,5 +33,5 @@ tracing-subscriber = "0.3.22"
 uuid = "1.19.0"
 worker = "0.7.1"
 zerocopy = "0.8.31"
-rig-core = "0.25.0"
-rig-derive = "0.1.9"
+rig-core = "0.28.0"
+rig-derive = "0.1.10"
