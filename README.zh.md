@@ -12,7 +12,7 @@
 
 ## 安装
 
-在 `Cargo.toml` 中添加需要的适配器依赖，并将 Rig 核心版本更新为 `rig-core = "0.25.0"`。
+在 `Cargo.toml` 中添加需要的适配器依赖，并将 Rig 核心版本更新为 `rig-core = "0.28.0"`。
 
 从 crates.io 安装（推荐）：
 
@@ -245,7 +245,7 @@ cargo run --example agent_wirh_bailian
 ## 版本与兼容性
 
 - Rust edition：2024
-- Rig 核心版本：建议使用 `rig-core = "0.25.0"`
+- Rig 核心版本：建议使用 `rig-core = "0.28.0"`
 - `rig-derive`（可选）：`0.1.9`
 
 各适配器的公共接口与 Rig 核心抽象保持一致，升级时请留意 trait 签名变动并确保依赖版本一致。
