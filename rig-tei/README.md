@@ -32,8 +32,8 @@ From crates.io (recommended):
 ```toml
 [dependencies]
 rig-tei = "0.1"
-rig-core = "0.25.0"    # Rig core
-rig-derive = "0.1.9"   # Optional: for derive macros like Embed
+rig-core = "0.28.0"    # Rig core
+rig-derive = "0.1.10"   # Optional: for derive macros like Embed
 ```
 
 From a workspace/path (if you’re developing locally):
@@ -41,8 +41,8 @@ From a workspace/path (if you’re developing locally):
 ```toml
 [dependencies]
 rig-tei = { path = "../rig-tei" }
-rig-core = "0.25.0"
-rig-derive = "0.1.9"
+rig-core = "0.28.0"
+rig-derive = "0.1.10"
 ```
 
 ## Configuration (Environment Variables)
@@ -150,7 +150,7 @@ cargo run --example tei_rerank
 ## Versioning and Compatibility
 
 - Rust edition: 2024
-- This crate aligns its public surface with the Rig core abstractions. Check your `rig-core` crate version for compatibility (examples use `rig-core = "0.25.0"`).
+- This crate aligns its public surface with the Rig core abstractions. Check your `rig-core` crate version for compatibility (examples use `rig-core = "0.28.0"`).
 
 ## License
 
