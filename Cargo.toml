@@ -1,9 +1,9 @@
 [workspace]
 resolver = "3"
-members = ["rig-bailian", "rig-tei","rig-volcengine"]
+members = ["rig-bailian", "rig-tei", "rig-volcengine"]
 
 [workspace.package]
-version = "0.1.2"
+version = "0.1.6"
 authors = ["jerrychir <jerrychir@gmail.com>"]
 edition = "2024"
 
