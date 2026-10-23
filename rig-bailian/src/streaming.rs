@@ -76,3 +76,92 @@ where
     )
     .await
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::Client;
+    use futures::StreamExt;
+    use rig::completion::CompletionRequestBuilder;
+    use rig::streaming::StreamedAssistantContent;
+    use std::time::Duration;
+    use tokio::io::{AsyncBufReadExt, AsyncReadExt, AsyncWriteExt, BufReader};
+    use tokio::net::TcpListener;
+
+    #[tokio::test]
+    async fn stream_sends_json_content_type() {
+        tokio::time::timeout(Duration::from_secs(5), async {
+            let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+            let endpoint = format!(
+                "http://{}/compatible-mode/v1",
+                listener.local_addr().unwrap()
+            );
+            let client = Client::<reqwest::Client>::builder("test-key")
+                .base_url(&endpoint)
+                .with_client(reqwest::Client::builder().no_proxy().build().unwrap())
+                .build();
+
+            let server = async {
+                let (socket, _) = listener.accept().await.unwrap();
+                let mut socket = BufReader::new(socket);
+                let mut head = String::new();
+                while !head.ends_with("\r\n\r\n") {
+                    assert_ne!(socket.read_line(&mut head).await.unwrap(), 0);
+                }
+                assert!(head.starts_with(
+                    "POST /compatible-mode/v1/chat/completions HTTP/1.1\r\n"
+                ));
+                let headers = head.to_ascii_lowercase();
+                assert!(headers
+                    .lines()
+                    .any(|line| line == "content-type: application/json"));
+                assert!(headers
+                    .lines()
+                    .any(|line| line == "authorization: bearer test-key"));
+                let content_length: usize = headers
+                    .lines()
+                    .find_map(|line| line.strip_prefix("content-length: "))
+                    .unwrap()
+                    .parse()
+                    .unwrap();
+                let mut body = vec![0; content_length];
+                socket.read_exact(&mut body).await.unwrap();
+                let body: serde_json::Value = serde_json::from_slice(&body).unwrap();
+                assert_eq!(body["model"], "test-model");
+                assert_eq!(body["stream"], true);
+                assert_eq!(body["stream_options"]["include_usage"], true);
+
+                let events = concat!(
+                    "data: {\"choices\":[{\"delta\":{\"content\":\"pong\"}}]}\n\n",
+                    "data: {\"choices\":[],\"usage\":{\"prompt_tokens\":1,",
+                    "\"completion_tokens\":1,\"total_tokens\":2}}\n\n",
+                    "data: [DONE]\n\n"
+                );
+                let response = format!(
+                    "HTTP/1.1 200 OK\r\nContent-Type: text/event-stream\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                    events.len(),
+                    events
+                );
+                socket.get_mut().write_all(response.as_bytes()).await.unwrap();
+            };
+            let request = async {
+                let model = CompletionModel::new(client, "test-model");
+                let mut stream = CompletionRequestBuilder::new(model, "ping")
+                    .stream()
+                    .await
+                    .unwrap();
+                let mut answer = String::new();
+                while let Some(item) = stream.next().await {
+                    if let StreamedAssistantContent::Text(text) = item.unwrap() {
+                        answer.push_str(&text.text);
+                    }
+                }
+                assert_eq!(answer, "pong");
+                assert!(stream.response.is_some());
+            };
+            tokio::join!(server, request);
+        })
+        .await
+        .expect("local streaming request timed out");
+    }
+}

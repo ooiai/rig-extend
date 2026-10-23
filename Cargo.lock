@@ -1061,6 +1061,7 @@ dependencies = [
  "anyhow",
  "async-stream",
  "base64",
+ "futures",
  "reqwest",
  "rig-core",
  "rig-derive",
